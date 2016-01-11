@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>low poly风格图片生成器</title>
+	<link rel="stylesheet" href="style/index.css">
+</head>
+
+<body>
+	<section id="set">
+		<div id="source-wrapper">
+			<label for="source-input">单击或将图片拖拽到此处</label>
+			<input type="file" name="source" id="source-input">
+		</div>
+		<div id="set-wrapper">
+			<label>Edge Detect(边界检测):</label>
+			<input type="text" name="EDGE_DETECT_VALUE">
+			<label>Point Rate(像素点比率):</label>
+			<input type="text" name="POINT_RATE">
+			<label>Point Max Num(最大取样点):</label>
+			<input type="text" name="POINT_MAX_NUM">
+			<label>Blur Size(模糊大小):</label>
+			<input type="text" name="BLUR_SIZE">
+			<label>Edge Size(边界大小):</label>
+			<input type="text" name="EDGE_SIZE">
+			<label>Pixel Limit(最大像素值):</label>
+			<input type="text" name="PIXEL_LIMIT">
+			<button id="run-btn">RUN</button>
+		</div>
+	</section>
+	<section id="wrapper">
+		<img src="img/00.jpg" alt="图片容器" id="img-wrapper">
+	</section>
+	<div id="prompt">
+		这里有一些提示
+	</div>
+	<script src="script/jquery.min.js"></script>
+	<script src="script/main.js"></script>
+</body>
+
+</html>
