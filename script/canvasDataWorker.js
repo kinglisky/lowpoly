@@ -431,6 +431,7 @@ var BASE = {
 var To = {
 	init: function (set, imgData) {
 		BASE.set = set;
+		//模糊处理矩阵
 		BASE.blur = (function (size) {
 			var matrix = [];
 			var side = size * 2 + 1;
@@ -439,7 +440,7 @@ var To = {
 			return matrix;
 		})(set.BLUR_SIZE);
 
-		// エッジ検出用コンボリューション行列を作成
+		// 边缘识别矩阵
 		BASE.edge = (function (size) {
 			var matrix = [];
 			var side = size * 2 + 1;
@@ -468,7 +469,7 @@ var To = {
 		W.emit('msg',{msg:'边缘检测分离'});
 		Filter.convolutionFilterR(edge, imageData);
 		// 检测边缘上的点
-		W.emit('msg',{msg:'获取边缘像素点'});
+		W.emit('msg',{msg:'获取边界识别后的随机取样点'});
 		var temp = Filter.getEdgePoint(imageData),
 			detectionNum = temp.length,
 			points = [];
@@ -488,7 +489,7 @@ var To = {
 		}
 
 		// 三角形分割
-		W.emit('msg',{msg:'三角形delaunay分割'});
+		W.emit('msg',{msg:'delaunay 三角形分割'});
 		var delaunay = new Delaunay(width, height),
 			colorData = BASE.colorData,
 			triangles = [],
@@ -524,7 +525,7 @@ var To = {
 			W.emit('renderOk');
 		});*/
 		triangles = delaunay.insert(points).getTriangles();
-		W.emit('msg',{msg:'生成渲染数据'});
+		W.emit('msg',{msg:'生成渲染用的数据'});
 		METHODS.duff(triangles)(function (item) {
 			p0 = item.nodes[0];
 			p1 = item.nodes[1];
