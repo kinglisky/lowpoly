@@ -7,10 +7,13 @@ $(document).ready(function () {
 			EDGE_DETECT_VALUE: 80,
 			//边缘上的点的生成的分布比率
 			POINT_RATE: 0.075,
-			//
+			//随机取样点的个数越多越详细，但不一定好
 			POINT_MAX_NUM: 4500,
+			//边缘模糊的大小
 			BLUR_SIZE: 2,
+			//边缘取样的个数
 			EDGE_SIZE: 6,
+			//图片的像素值
 			PIXEL_LIMIT: 8000000
 		},
 		USE: {
@@ -20,7 +23,6 @@ $(document).ready(function () {
 			canvas: null,
 			context: null,
 			imgData: [],
-			state: 'begin',
 			origin: {}
 		},
 		DOM: {
@@ -243,7 +245,6 @@ $(document).ready(function () {
 
 	ME.WOK = ME.METHODS.FactoryWorker('./script/canvasDataWorker.js');
 	//	ME.WOK = ME.METHODS.FactoryWorker('./script/handleWorker.js');
-	//	ME.WOK = ME.METHODS.FactoryWorker('./script/testWorker.js');
 	//文件输入框选择图片
 	ME.DOM.$sourceInput.on('change', function (event) {
 		if (!this.value) return;
@@ -278,7 +279,6 @@ $(document).ready(function () {
 		ME.METHODS.updatePrompt('开始处理图片');
 		ME.USE.beginTime = +new Date();
 		ME.USE.imgData = ME.METHODS.getImgData(ME.USE.sourceImg);
-		testImgData = ME.USE.context.createImageData(ME.USE.imgData.width, ME.USE.imgData.height);
 		ME.WOK.emit('run', {
 			set: ME.DEFAULT,
 			imgData: ME.USE.imgData
@@ -292,7 +292,7 @@ $(document).ready(function () {
 	ME.WOK.on('msg', function (event, data) {
 		ME.METHODS.updatePrompt(data.msg);
 	});
-	//分片处理
+	//分片处理，效果不太好
 	/*var item = null,
 		queue = [];
 	ME.WOK.on('render', function (event, data) {
@@ -316,7 +316,7 @@ $(document).ready(function () {
 		ME.METHODS.onPrompt(false);
 	});*/
 	ME.WOK.on('ok', function (event, data) {
-		ME.METHODS.updatePrompt('后台处理完成，开始渲染图片');
+		ME.METHODS.updatePrompt('woker处理完成，开始渲染图片');
 		ME.METHODS.render(data.renderData);
 		ME.METHODS.drawImg();
 		ME.USE.endTime = +new Date();

@@ -553,7 +553,6 @@ var To = {
 
 
 W.on('run', function (data) {
-	console.log(data.imgData);
 	To.init(data.set, data.imgData);
 	To.do();
 	/*W.emit('ok', {
