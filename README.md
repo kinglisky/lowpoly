@@ -5,7 +5,7 @@
 [项目地址](https://github.com/kinglisky/lowpoly)
 
 
-嘛，前端时间在找素材的时候，突然间发现一种叫做**low poly**（低多边形）风格的图片，感觉挺有意思的，找各种工具的的时候，知乎上面看到几个[不错的回答](https://www.zhihu.com/question/29856775?sort=created)，目前以自己的水平能看懂（算法看不懂）的也只有*[这个](https://github.com/kinglisky/delaunay)*了，但感觉他的工具不是很友好，所以自己有重写一个。
+嘛，前段时间在找素材的时候，突然间发现一种叫做**low poly**（低多边形）风格的图片，感觉挺有意思的，找各种工具的的时候，知乎上面看到几个[不错的回答](https://www.zhihu.com/question/29856775?sort=created)，目前以自己的水平能看懂（算法看不懂）的也只有*[这个](https://github.com/kinglisky/delaunay)*了，但感觉他的工具不是很友好，所以自己重写了一个。
 
 本来想着能不能把它的处理速度提高一点的，于是用了web workers，就结果而言，一句概括：然而并没有什么卵用......
 
