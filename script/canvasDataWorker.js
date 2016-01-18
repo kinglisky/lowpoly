@@ -55,13 +55,15 @@ var Filter = {
 	 * 取每个像素点的颜色的平均值
 	 */
 	grayscaleFilterR: function (imageData) {
-		var width = imageData.width | 0;
-		var height = imageData.height | 0;
-		var data = imageData.data;
+		var width = imageData.width | 0,
+			height = imageData.height | 0,
+			data = imageData.data,
+			max = Math.max,
+			min = Math.min;
 
-		var x, y;
-		var i, step;
-		var r, g, b;
+		var x, y,
+			i, step,
+			r, g, b;
 
 		for (y = 0; y < height; y++) {
 			step = y * width;
@@ -72,7 +74,7 @@ var Filter = {
 				g = data[i + 1];
 				b = data[i + 2];
 
-				data[i] = (Math.max(r, g, b) + Math.min(r, g, b)) >> 2;
+				data[i] = (max(r, g, b) + min(r, g, b)) >> 2;
 			}
 		}
 
@@ -102,17 +104,17 @@ var Filter = {
 		// 参照用にオリジナルをコピー, グレースケールなので Red チャンネルのみ
 		len = data.length >> 2;
 		var copy = new Uint8Array(len);
-		for (i = 0; i < len; i++) copy[i] = data[i << 2];
+		for (var i = 0; i < len; i++) copy[i] = data[i << 2];
 
-		var width = imageData.width | 0;
-		var height = imageData.height | 0;
-		var size = Math.sqrt(matrix.length);
-		var range = size * 0.5 | 0;
+		var width = imageData.width | 0,
+			height = imageData.height | 0,
+			size = Math.sqrt(matrix.length),
+			range = size * 0.5 | 0;
 
-		var x, y;
-		var r, g, b, v;
-		var col, row, sx, sy;
-		var i, istep, jstep, kstep;
+		var x, y,
+			r, g, b, v,
+			col, row, sx, sy,
+			i, istep, jstep, kstep;
 
 		for (y = 0; y < height; y++) {
 			istep = y * width;
@@ -180,7 +182,7 @@ var Filter = {
 				}
 
 				if (total) sum /= total;
-				if (sum > E) points.push(new Array(x, y));
+				if (sum > E) points.push([x, y]);
 			}
 		}
 
@@ -451,7 +453,7 @@ var To = {
 		})(set.EDGE_SIZE);
 
 		BASE.imgData = imgData;
-		BASE.colorData = Array.prototype.slice.call(imgData.data);
+		BASE.colorData = new Uint8Array(imgData.data);
 
 	},
 	do: function () {
@@ -462,26 +464,35 @@ var To = {
 			blur = BASE.blur,
 			edge = BASE.edge;
 		//过滤器用于处理图片的数据
-		W.emit('msg',{msg:'分离颜色通道'});
+		W.emit('msg', {
+			msg: '分离颜色通道'
+		});
 		Filter.grayscaleFilterR(imageData);
-		W.emit('msg',{msg:'边缘模糊处理'});
+		W.emit('msg', {
+			msg: '边缘模糊处理'
+		});
 		Filter.convolutionFilterR(blur, imageData, blur.length);
-		W.emit('msg',{msg:'边缘检测分离'});
+		W.emit('msg', {
+			msg: '边缘检测分离'
+		});
 		Filter.convolutionFilterR(edge, imageData);
 		// 检测边缘上的点
-		W.emit('msg',{msg:'获取边界识别后的随机取样点'});
+		W.emit('msg', {
+			msg: '获取边界识别后的随机取样点'
+		});
 		var temp = Filter.getEdgePoint(imageData),
 			detectionNum = temp.length,
 			points = [];
 		var i = 0,
 			ilen = temp.length,
 			tlen = ilen,
-			j, limit = Math.round(ilen * set.POINT_RATE);
+			j, limit = Math.round(ilen * set.POINT_RATE),
+			random = Math.random;
 		if (limit > set.POINT_MAX_NUM) limit = set.POINT_MAX_NUM;
 
 		// 随机取样
 		while (i < limit && i < ilen) {
-			j = tlen * Math.random() | 0;
+			j = tlen * random() | 0;
 			points.push(temp[j]);
 			temp.splice(j, 1);
 			tlen--;
@@ -489,7 +500,9 @@ var To = {
 		}
 
 		// 三角形分割
-		W.emit('msg',{msg:'delaunay 三角形分割'});
+		W.emit('msg', {
+			msg: 'delaunay 三角形分割'
+		});
 		var delaunay = new Delaunay(width, height),
 			colorData = BASE.colorData,
 			triangles = [],
@@ -525,7 +538,9 @@ var To = {
 			W.emit('renderOk');
 		});*/
 		triangles = delaunay.insert(points).getTriangles();
-		W.emit('msg',{msg:'生成渲染用的数据'});
+		W.emit('msg', {
+			msg: '生成渲染用的数据'
+		});
 		METHODS.duff(triangles)(function (item) {
 			p0 = item.nodes[0];
 			p1 = item.nodes[1];

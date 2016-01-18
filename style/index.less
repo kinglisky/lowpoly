@@ -16,7 +16,7 @@ body {
 
 section {
 	box-sizing: border-box;
-//	border: 1px solid #ccc;
+	//	border: 1px solid #ccc;
 	display: block;
 	float: left;
 	height: 100%;
@@ -38,7 +38,7 @@ section {
 	border-radius: 5px;
 	//	box-shadow: 10px 10px 15px 0px #000000;
 	>input[type="file"] {
-//		display: none;
+		//		display: none;
 		height: 100%;
 		width: 100%;
 		position: absolute;
@@ -48,7 +48,6 @@ section {
 		cursor: pointer;
 	}
 	>label {
-
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -74,7 +73,11 @@ section {
 		padding: 0.4rem 0.3rem;
 		border: 1px solid #ccc;
 	}
-	>button {
+}
+
+#btn-wra {
+	button {
+		border-radius: 5px;
 		cursor: pointer;
 		margin-top: 1em;
 		height: 2.5rem;
@@ -86,6 +89,10 @@ section {
 			color: #b7b7b7;
 			background-color: #7fb428;
 		}
+		&.disable {
+			background-color: #83ac40;
+			cursor:not-allowed;
+		}
 	}
 }
 
@@ -93,21 +100,22 @@ section {
 	width: 70%;
 	border-left: 1px solid #ccc;
 	overflow: hidden;
-	>img{
+	>img {
 		display: block;
 		margin: 3% auto 5%;
 		height: 90%;
 	}
 }
-#prompt{
+
+#prompt {
 	display: none;
-	box-sizing:border-box;
+	box-sizing: border-box;
 	padding: 20% 0;
-	position:fixed;
+	position: fixed;
 	color: #fff;
 	text-align: center;
 	font-size: 2rem;
-	background-color: rgba(0,0,0,0.5);
+	background-color: rgba(0, 0, 0, 0.5);
 	height: 100%;
 	width: 100%;
 	top: 0;

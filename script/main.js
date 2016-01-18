@@ -20,6 +20,7 @@ $(document).ready(function () {
 			beginTime: null,
 			endTime: null,
 			sourceImg: null,
+			defaultImg: new Image(),
 			canvas: null,
 			context: null,
 			imgData: [],
@@ -32,6 +33,7 @@ $(document).ready(function () {
 			$setWrapper: $('#set-wrapper'),
 			$setInputs: $('#set-wrapper>input'),
 			$runBtn: $('#run-btn'),
+			$downloadBth: $('#download-btn'),
 			$prompt: $('#prompt')
 		},
 		METHODS: {},
@@ -240,9 +242,10 @@ $(document).ready(function () {
 	//上面是一些预先定义的方法
 	/*----------------------------------------------------------------------*/
 	//下面是正式处理程序
-
-
-
+	//	设置默认处理图片,虽然是异步，但一开始就加载应该没什么问题
+	ME.USE.defaultImg.src = ME.DOM.$imgWrapper.get(0).src;
+	//	禁用下载按钮按钮
+	ME.DOM.$downloadBth.attr("disabled", true);
 	ME.WOK = ME.METHODS.FactoryWorker('./script/canvasDataWorker.js');
 	//	ME.WOK = ME.METHODS.FactoryWorker('./script/handleWorker.js');
 	//文件输入框选择图片
@@ -272,8 +275,9 @@ $(document).ready(function () {
 	//点击执行
 	ME.DOM.$runBtn.on('click', function (event) {
 		if (!ME.USE.sourceImg) {
-			ME.METHODS.setImg(ME.DOM.$imgWrapper.get(0));
+			ME.METHODS.setImg(ME.USE.defaultImg);
 		}
+		ME.DOM.$downloadBth.attr("disabled", true).addClass('disable');
 		ME.METHODS.updateDefault();
 		ME.METHODS.onPrompt(true);
 		ME.METHODS.updatePrompt('开始处理图片');
@@ -284,6 +288,13 @@ $(document).ready(function () {
 			imgData: ME.USE.imgData
 		});
 		ME.USE.imgData = null;
+	});
+	//点击下载
+	ME.DOM.$downloadBth.on('click', function (event) {
+		var link = document.createElement('a');
+		link.href = ME.DOM.$imgWrapper.prop('src');
+		link.download = 'LowPoly';
+		link.click();
 	});
 
 
@@ -317,6 +328,7 @@ $(document).ready(function () {
 	});*/
 	ME.WOK.on('ok', function (event, data) {
 		ME.METHODS.updatePrompt('woker处理完成，开始渲染图片');
+		ME.DOM.$downloadBth.attr("disabled", false).removeClass('disable');
 		ME.METHODS.render(data.renderData);
 		ME.METHODS.drawImg();
 		ME.USE.endTime = +new Date();
